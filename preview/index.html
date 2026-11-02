@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>WOJHAT Travel & Tourism Mobile App Simulator (Android & iOS)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Simulator Top Controls Bar -->
+  <div class="simulator-controls">
+    <div class="sim-brand">
+      <div class="sim-logo">W</div>
+      <div class="sim-title">
+        WOJHAT Travel Mobile App
+        <span>Interactive Cross-Platform Preview (wojhat.com.sa)</span>
+      </div>
+    </div>
+
+    <div class="sim-actions">
+      <!-- Device Switcher -->
+      <button id="btnIos" class="sim-btn active" onclick="setDevice('ios')">
+        📱 Apple iPhone 16 Pro
+      </button>
+      <button id="btnAndroid" class="sim-btn" onclick="setDevice('android')">
+        🤖 Samsung Galaxy S24
+      </button>
+
+      <!-- Language Switcher -->
+      <button class="sim-btn" onclick="toggleLanguage()">
+        🌐 <span id="simLangLabel">العربية / English</span>
+      </button>
+
+      <!-- WhatsApp Live Direct -->
+      <button class="sim-btn" style="background: #25D366; color: #fff; border-color: #25D366;" onclick="openWhatsAppGeneral()">
+        💬 WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <!-- Device Simulator Viewport -->
+  <div class="device-wrapper">
+    <div class="device-frame" id="deviceFrame">
+      <div class="device-screen">
+        
+        <!-- Camera Notch / Dynamic Island -->
+        <div class="island-notch" id="islandNotch">
+          <div class="notch-camera"></div>
+          <div class="notch-sensor"></div>
+        </div>
+
+        <!-- Mobile OS Status Bar -->
+        <div class="status-bar">
+          <span id="statusClock">14:30</span>
+          <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>🔋 98%</span>
+          </div>
+        </div>
+
+        <!-- In-App Header -->
+        <div class="app-header">
+          <div class="header-brand">
+            <div class="header-badge">W</div>
+            <div class="header-titles">
+              <span class="header-title" id="headerTitle">وجهات للسفر</span>
+              <span class="header-sub" id="headerSub">للسفر والسياحة</span>
+            </div>
+          </div>
+
+          <div class="header-tools">
+            <button class="tool-pill" id="currencyToggleBtn" onclick="cycleCurrency()">SAR</button>
+            <button class="tool-pill gold" id="langToggleBtn" onclick="toggleLanguage()">English</button>
+          </div>
+        </div>
+
+        <!-- Scrollable Mobile Viewport -->
+        <div class="main-viewport" id="viewportContent">
+          <!-- Dynamically populated by app.js -->
+        </div>
+
+        <!-- Detailed Modal / Screen Overlay -->
+        <div class="detail-view" id="detailView">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Bottom Tab Bar -->
+        <div class="bottom-nav">
+          <button class="nav-tab active" id="nav-home" onclick="switchTab('home')">
+            <span class="nav-tab-icon">🏛</span>
+            <span id="tabExploreText">الرئيسية</span>
+          </button>
+
+          <button class="nav-tab" id="nav-destinations" onclick="switchTab('destinations')">
+            <span class="nav-tab-icon">🗺</span>
+            <span id="tabDestText">الوجهات</span>
+          </button>
+
+          <button class="nav-tab" id="nav-packages" onclick="switchTab('packages')">
+            <span class="nav-tab-icon">✨</span>
+            <span id="tabPkgText">الباقات</span>
+          </button>
+
+          <button class="nav-tab" id="nav-custom" onclick="switchTab('custom')">
+            <div class="nav-center-pill">✦</div>
+            <span id="tabCustomText">صمم رحلتك</span>
+          </button>
+
+          <button class="nav-tab" id="nav-services" onclick="switchTab('services')">
+            <span class="nav-tab-icon">👑</span>
+            <span id="tabSrvText">خدمات VIP</span>
+          </button>
+
+          <button class="nav-tab" id="nav-contact" onclick="switchTab('contact')">
+            <span class="nav-tab-icon">🏢</span>
+            <span id="tabContactText">تواصل معنا</span>
+          </button>
+        </div>
+
+        <!-- iOS Home Indicator -->
+        <div class="home-indicator"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Booking Sheet Modal -->
+  <div class="modal-overlay" id="bookingModal" onclick="if(event.target === this) closeBookingModal()">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title" id="modalBookingTitle">حجز الباقة السياحية</div>
+        <button class="modal-close" onclick="closeBookingModal()">✕</button>
+      </div>
+
+      <div style="background: var(--surface); padding: 12px; border-radius: 10px; margin-bottom: 12px; border-left: 3px solid var(--gold);">
+        <div style="font-weight: 700; color: #fff; font-size: 13px;" id="modalPkgTitle">Signature Family Holiday Escape</div>
+        <div style="font-size: 11px; color: var(--gold); margin-top: 2px;">WOJHAT Guaranteed Luxury Experience</div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 10px;">
+        <label class="form-label">الاسم الكامل *</label>
+        <input type="text" id="bookName" class="form-input" placeholder="محمد السبيعي" />
+      </div>
+
+      <div class="form-group" style="margin-bottom: 10px;">
+        <label class="form-label">رقم الجوال / واتساب *</label>
+        <input type="tel" id="bookPhone" class="form-input" placeholder="+966 5X XXX XXXX" value="+966 5" />
+      </div>
+
+      <div class="form-group" style="margin-bottom: 12px;">
+        <label class="form-label">تاريخ السفر التقريبي</label>
+        <input type="date" id="bookDate" class="form-input" value="2026-12-15" />
+      </div>
+
+      <div style="background: rgba(197, 168, 128, 0.12); padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border: 1px solid rgba(197, 168, 128, 0.3);">
+        <span style="font-size: 12px; color: #fff;">المجموع التقديري:</span>
+        <span style="font-size: 16px; font-weight: 800; color: var(--gold-light);" id="modalPriceVal">9,700 ر.س</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <button class="btn-whatsapp" style="justify-content: center; padding: 12px;" onclick="handleModalSubmit(true)">
+          💬 إرسال الطلب عبر واتساب
+        </button>
+        <button class="btn-primary" style="padding: 12px;" onclick="handleModalSubmit(false)">
+          تأكيد الحجز المباشر
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
